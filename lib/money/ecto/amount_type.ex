@@ -65,8 +65,9 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     def cast(_), do: :error
 
-    @spec load(integer()) :: {:ok, Money.t()}
+    @spec load(integer() | Decimal.t()) :: {:ok, Money.t()}
     def load(int) when is_integer(int), do: {:ok, Money.new(int)}
+    def load(%Decimal{} = decimal), do: {:ok, Money.parse!(decimal)}
 
     @spec dump(integer() | Money.t()) :: {:ok, integer()}
     def dump(int) when is_integer(int), do: {:ok, int}
@@ -75,6 +76,7 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     defp same_as_default_currency?(currency) do
       default_currency_string = Application.get_env(:money, :default_currency) |> to_string |> String.downcase()
+
       currency_string = currency |> to_string |> String.downcase()
       default_currency_string == currency_string
     end
