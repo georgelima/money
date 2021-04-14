@@ -24,8 +24,8 @@ if Code.ensure_loaded?(Ecto.Type) do
       @behaviour Ecto.Type
     end
 
-    @spec type :: :integer
-    def type, do: :integer
+    @spec type :: :bigint
+    def type, do: :bigint
 
     def embed_as(_), do: :dump
 
