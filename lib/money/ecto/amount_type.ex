@@ -38,6 +38,8 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     def cast(int) when is_integer(int), do: {:ok, Money.new(int)}
 
+    def cast(%Decimal{} = decimal), do: Money.parse(decimal)
+
     def cast(%Money{currency: currency} = money) do
       case same_as_default_currency?(currency) do
         true -> {:ok, money}
