@@ -14,6 +14,20 @@ Elixir library for working with Money safer, easier, and fun, is an interpretati
 In short: You shouldn't represent monetary values by a float. Wherever
 you need to represent money, use `Money`.
 
+## Installation
+
+Money comes with no required dependencies.
+
+Add the following to your `mix.exs`:
+
+```elixir
+def deps do
+  [{:money, "~> 1.4"}]
+end
+```
+
+then run [`mix deps.get`](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix).
+
 ## Usage
 
 ```elixir
@@ -104,27 +118,27 @@ The underlying database type is `integer`
 1.  Create migration with custom type:
 
     ```elixir
-      def up do
-        execute """
-        CREATE TYPE public.money_with_currency AS (amount integer, currency char(3))
-        """
-      end
+    def up do
+      execute """
+      CREATE TYPE public.money_with_currency AS (amount integer, currency char(3))
+      """
+    end
 
-      def down do
-        execute """
-        DROP TYPE public.money_with_currency
-        """
-      end
+    def down do
+      execute """
+      DROP TYPE public.money_with_currency
+      """
+    end
     ```
 
 2.  Then use created custom type(`money_with_currency`) for money field:
 
     ```elixir
-      def change do
-        alter table(:jobs) do
-          add :price, :money_with_currency
-        end
-      end`
+    def change do
+      alter table(:jobs) do
+        add :price, :money_with_currency
+      end
+    end
     ```
 
 3.  Create schema using the `Money.Ecto.Composite.Type` Ecto type (don't forget run `mix ecto.migrate`):
@@ -173,11 +187,11 @@ The underlying database type is `integer`
 1.  Create migration with map type:
 
     ```elixir
-      def change do
-        alter table(:jobs) do
-          add :price, :map
-        end
+    def change do
+      alter table(:jobs) do
+        add :price, :map
       end
+    end
     ```
 
 2.  Create schema using the `Money.Ecto.Map.Type` Ecto type (don't forget run `mix ecto.migrate`):
@@ -260,20 +274,6 @@ If you are using Phoenix, you can include money objects directly into your outpu
 ```elixir
 <b><%= Money.new(12345,67, :GBP) %></b>
 ```
-
-## Installation
-
-Money comes with no required dependencies.
-
-Add the following to your `mix.exs`:
-
-```elixir
-def deps do
-  [{:money, "~> 1.4"}]
-end
-```
-
-then run [`mix deps.get`](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix).
 
 ## Configuration
 
@@ -361,4 +361,4 @@ end
 
 ## License
 
-MIT License please see the [LICENSE](./LICENSE) file.
+MIT License please see the [LICENSE.md](./LICENSE.md) file.

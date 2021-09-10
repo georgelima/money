@@ -39,7 +39,11 @@ defmodule MoneyTest do
     assert Money.parse("-1000.0", :USD) == {:ok, usd(-100_000)}
 
     assert Money.parse(Decimal.from_float(-1000.0), :USD) == {:ok, usd(-100_000)}
-    assert Money.parse(Decimal.from_float(4000.456), :USD) == {:ok, usd(4000_46)}
+    assert Money.parse(Decimal.from_float(4000.765), :USD) == {:ok, usd(4000_77)}
+
+    Decimal.Context.with(%Decimal.Context{rounding: :floor}, fn ->
+      assert Money.parse(Decimal.from_float(4000.765), :USD) == {:ok, usd(4000_76)}
+    end)
 
     assert Money.parse(".25", :USD) == {:ok, usd(25)}
     assert Money.parse(",25", :EUR, separator: ".", delimiter: ",") == {:ok, eur(25)}
@@ -176,6 +180,12 @@ defmodule MoneyTest do
     assert Money.multiply(Money.new(200, :USD), 1.5) == Money.new(300, :USD)
     assert Money.multiply(Money.new(200, :USD), 1.333) == Money.new(267, :USD)
     assert Money.multiply(Money.new(200, :USD), 1.335) == Money.new(267, :USD)
+    assert Money.multiply(Money.new(200, :USD), Decimal.new("1.333")) == Money.new(267, :USD)
+    assert Money.multiply(Money.new(200, :USD), Decimal.new("1.335")) == Money.new(267, :USD)
+
+    Decimal.Context.with(%Decimal.Context{rounding: :floor}, fn ->
+      assert Money.multiply(Money.new(200, :USD), Decimal.new("1.333")) == Money.new(266, :USD)
+    end)
   end
 
   test "test divide" do
@@ -248,6 +258,13 @@ defmodule MoneyTest do
     assert Money.to_string(eur(1234), strip_insignificant_zeros: true) == "€12.34"
     assert Money.to_string(xau(20305), strip_insignificant_zeros: true) == "203.05"
     assert Money.to_string(zar(1_234_567_890), strip_insignificant_zeros: true) == "R12,345,678.9"
+  end
+
+  test "to_string with code true" do
+    assert Money.to_string(usd(500), code: true) == "$5.00 USD"
+    assert Money.to_string(eur(1234), code: true) == "€12.34 EUR"
+    assert Money.to_string(xau(20305), code: true) == "203.05 XAU"
+    assert Money.to_string(zar(1_234_567_890), code: true) == "R12,345,678.90 ZAR"
   end
 
   test "to_string with different exponents" do

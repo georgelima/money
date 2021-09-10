@@ -1,7 +1,7 @@
 defmodule Money.Mixfile do
   use Mix.Project
 
-  @version "1.8.0"
+  @version "1.9.0"
   @github_url "https://github.com/elixirmoney/money"
 
   def project do
@@ -37,7 +37,7 @@ defmodule Money.Mixfile do
     [
       # Soft dependencies
       {:ecto, "~> 1.0 or ~> 2.0 or ~> 2.1 or ~> 3.0", optional: true},
-      {:phoenix_html, "~> 2.0", optional: true},
+      {:phoenix_html, "~> 2.0 or ~> 3.0", optional: true},
       {:decimal, "~> 1.0 or ~> 2.0", optional: true},
 
       # Code style and analyzers
